@@ -1,5 +1,0 @@
-package: .
-import:
-- package: github.com/gocolly/colly
-- package: github.com/gorilla/mux
-- package: github.com/urfave/cli
