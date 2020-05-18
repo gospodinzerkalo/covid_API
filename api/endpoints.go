@@ -13,6 +13,7 @@ const (
 	baseURL = "https://www.worldometers.info/coronavirus/"
 )
 
+
 func GetAllCases() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		c := colly.NewCollector()
@@ -48,16 +49,66 @@ func GetByCountry(countryParam string) func(w http.ResponseWriter,r *http.Reques
 			writeResponse(w, http.StatusBadRequest, []byte("Crime ID not found"))
 			return
 		}
-		c.OnHTML("#main_table_countries_today", func(element *colly.HTMLElement) {
-			fmt.Print(element.ChildText("tbody:contains(\"Kazakhstan\")"))
+		resCountry := &Country{}
+		c.OnHTML("#main_table_countries_today tbody", func(element *colly.HTMLElement) {
+			element.ForEach("tr", func(_ int, el*colly.HTMLElement)  {
+				s := el.ChildText(".mt_a")
+				if s==country{
+					c := el.ChildTexts("td")
+					resCountry.Name = s
+					resCountry.Place = c[0]
+					resCountry.Cases = c[2]
+					resCountry.NewCases = c[3]
+					resCountry.Deaths = c[4]
+					resCountry.NewDeaths = c[5]
+					resCountry.Recovered =c[6]
+					resCountry.ActiveCases = c[7]
+					resCountry.Critical = c[8]
+				}
+
+			})
 		})
 		c.Visit(baseURL)
-		fmt.Println(country)
+		data, err := json.Marshal(resCountry)
+		if err != nil {
+			writeResponse(w, http.StatusInternalServerError, []byte("Error: "+err.Error()))
+			return
+		}
+		writeResponse(w, http.StatusOK, data)
+
 	}
 }
+func GetCountries() func(w http.ResponseWriter,r *http.Request){
+	return func(w http.ResponseWriter, r *http.Request) {
+		countries := []*Country{}
+		c := colly.NewCollector()
+		c.OnHTML("#main_table_countries_today tbody", func(element *colly.HTMLElement) {
+			element.ForEach("tr", func(_ int, el*colly.HTMLElement)  {
 
+				resCountry := &Country{}
+				c := el.ChildTexts("td")
+				resCountry.Name = c[1]
+				resCountry.Place = c[0]
+				resCountry.Cases = c[2]
+				resCountry.NewCases = c[3]
+				resCountry.Deaths = c[4]
+				resCountry.NewDeaths = c[5]
+				resCountry.Recovered =c[6]
+				resCountry.ActiveCases = c[7]
+				resCountry.Critical = c[8]
+				countries = append(countries,resCountry)
 
-
+			})
+		})
+		c.Visit(baseURL)
+		data, err := json.Marshal(countries)
+		if err != nil {
+			writeResponse(w, http.StatusInternalServerError, []byte("Error: "+err.Error()))
+			return
+		}
+		writeResponse(w, http.StatusOK, data)
+	}
+}
 
 
 func writeResponse(w http.ResponseWriter, status int, msg []byte) {
