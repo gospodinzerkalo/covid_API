@@ -3,8 +3,10 @@ package api
 // AllCases ...
 type AllCases struct {
 	Cases 		string 	`json:"cases"`
-	Deaths		string		`json:"deaths"`
+	Deaths		string	`json:"deaths"`
 	Recovered	string 	`json:"recovered"`
+	ActiveCases	string	`json:"active_cases"`
+	Critical	string	`json:"critical"`
 }
 
 
@@ -19,5 +21,9 @@ type Country struct {
 	Recovered	string	`json:"recovered"`
 	ActiveCases	string	`json:"active_cases"`
 	Critical	string	`json:"critical"`
+}
+
+type Updates struct {
+	Results	[]string	`json:"results"`
 }
 

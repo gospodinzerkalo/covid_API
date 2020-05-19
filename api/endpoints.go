@@ -18,17 +18,20 @@ func GetAllCases() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		c := colly.NewCollector()
 		list := make([]string,0)
-
-		c.OnHTML(".maincounter-number", func(element *colly.HTMLElement) {
+		cases := AllCases{}
+		c.OnHTML(".content-inner", func(element *colly.HTMLElement) {
 			list = append(list,strings.TrimSpace(element.Text))
+			s1 := element.ChildTexts(".maincounter-number")
+			s2 := element.ChildTexts(".number-table-main")
+			cases.Cases = s1[0]
+			cases.Deaths = s1[1]
+			cases.Recovered = s1[2]
+			cases.ActiveCases = s2[0]
+			cases.Critical = s2[1]
 		})
+
 		c.Visit(baseURL)
 		fmt.Println()
-		cases := AllCases{
-			Cases:    	list[0],
-			Deaths:    list[1],
-			Recovered: list[2],
-		}
 		data, err := json.Marshal(cases)
 		if err != nil {
 			writeResponse(w, http.StatusInternalServerError, []byte("Error: "+err.Error()))
@@ -102,6 +105,23 @@ func GetCountries() func(w http.ResponseWriter,r *http.Request){
 		})
 		c.Visit(baseURL)
 		data, err := json.Marshal(countries)
+		if err != nil {
+			writeResponse(w, http.StatusInternalServerError, []byte("Error: "+err.Error()))
+			return
+		}
+		writeResponse(w, http.StatusOK, data)
+	}
+}
+
+func GetUpdates() func(w http.ResponseWriter,r *http.Request){
+	return func(w http.ResponseWriter, r *http.Request) {
+		c:= colly.NewCollector()
+		updates := Updates{}
+		c.OnHTML("#newsdate2020-05-19", func(element *colly.HTMLElement) {
+			updates.Results = element.ChildTexts(".news_ul")
+		})
+		c.Visit(baseURL)
+		data, err := json.Marshal(updates)
 		if err != nil {
 			writeResponse(w, http.StatusInternalServerError, []byte("Error: "+err.Error()))
 			return
