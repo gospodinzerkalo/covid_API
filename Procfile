@@ -1,1 +1,0 @@
-web: covid_API
