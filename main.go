@@ -30,7 +30,8 @@ func StartServer(d *cli.Context) error {
 	router.Methods("GET").Path("/allcases").HandlerFunc(api.GetAllCases())
 	router.Methods("GET").Path("/country/{country}").HandlerFunc(api.GetByCountry("country"))
 	router.Methods("GET").Path("/countries").HandlerFunc(api.GetCountries())
-	router.Methods("GET").Path("/updates").HandlerFunc(api.GetUpdates())
+	router.Methods("GET").Path("/updates/today").HandlerFunc(api.GetUpdatesToday())
+	router.Methods("GET").Path("/updates/all").HandlerFunc(api.GetUpdatesAll())
 
 	http.ListenAndServe("0.0.0.0:8000", router)
 	return nil

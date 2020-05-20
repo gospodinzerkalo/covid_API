@@ -24,6 +24,6 @@ type Country struct {
 }
 
 type Updates struct {
-	Results	[]string	`json:"results"`
+	Results	[]string	`json:"results,omitempty"`
 }
 

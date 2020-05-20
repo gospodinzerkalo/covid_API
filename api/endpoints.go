@@ -113,14 +113,22 @@ func GetCountries() func(w http.ResponseWriter,r *http.Request){
 	}
 }
 
-func GetUpdates() func(w http.ResponseWriter,r *http.Request){
+func GetUpdatesToday() func(w http.ResponseWriter,r *http.Request){
 	return func(w http.ResponseWriter, r *http.Request) {
 		c:= colly.NewCollector()
-		updates := Updates{}
-		c.OnHTML("#newsdate2020-05-19", func(element *colly.HTMLElement) {
-			updates.Results = element.ChildTexts(".news_ul")
+		list := make([]string,0)
+		c.OnHTML("#news_block", func(element *colly.HTMLElement) {
+			list =strings.Split(strings.TrimSpace(element.ChildTexts("div")[1]),"\n")
+
+
 		})
 		c.Visit(baseURL)
+		updates := Updates{}
+		for _,v := range list[1:] {
+			if v!=""{
+				updates.Results= append( updates.Results,strings.Replace(v, "[source]", "", 1))
+			}
+		}
 		data, err := json.Marshal(updates)
 		if err != nil {
 			writeResponse(w, http.StatusInternalServerError, []byte("Error: "+err.Error()))
@@ -130,6 +138,18 @@ func GetUpdates() func(w http.ResponseWriter,r *http.Request){
 	}
 }
 
+func GetUpdatesAll() func(w http.ResponseWriter,r *http.Request){
+	return func(w http.ResponseWriter, r *http.Request) {
+		c := colly.NewCollector()
+
+		c.OnHTML(".newsdate_div", func(element *colly.HTMLElement) {
+			fmt.Println(element.ChildTexts(".news_post")[1])
+		})
+
+
+		c.Visit(baseURL)
+	}
+}
 
 func writeResponse(w http.ResponseWriter, status int, msg []byte) {
 	w.WriteHeader(status)
