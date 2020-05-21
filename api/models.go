@@ -27,3 +27,8 @@ type Updates struct {
 	Results	[]string	`json:"results,omitempty"`
 }
 
+type UpdatesAll struct {
+	Day		string		`json:"day"`
+	Results	[]string 	`json:"results"`
+}
+

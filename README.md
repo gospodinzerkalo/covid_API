@@ -9,8 +9,8 @@
 
 <p><b>GET</b> "/country/updates/today" >updates for current day</p> 
 
-<p><b>GET</b> "/updates" >updates for current day</p> <hr>
-<h2>Installation of project</h2>
+<p><b>GET</b> "/updates/all" >updates for week</p> <hr>
+<h2>Installation of project (Ubuntu)</h2>
 <h3>Clone the Project </h3>
 <code>git clone github.com/gospodinzerkalo/covid_API</code>
 <h3>Install the dependencies</h3>

@@ -141,13 +141,23 @@ func GetUpdatesToday() func(w http.ResponseWriter,r *http.Request){
 func GetUpdatesAll() func(w http.ResponseWriter,r *http.Request){
 	return func(w http.ResponseWriter, r *http.Request) {
 		c := colly.NewCollector()
-
+		updates := []UpdatesAll{}
 		c.OnHTML(".newsdate_div", func(element *colly.HTMLElement) {
-			fmt.Println(element.ChildTexts(".news_post")[1])
+			updates = append(updates,UpdatesAll{Results: element.ChildTexts(".news_post")})
+
 		})
 
-
+		indD := 0
+		c.OnHTML("[class='btn btn-light date-btn']", func(element *colly.HTMLElement) {
+			updates[indD].Day = element.Text
+			indD++
+		})
 		c.Visit(baseURL)
+		data, err := json.Marshal(&updates)
+		if err!=nil {
+			writeResponse(w,http.StatusInternalServerError,[]byte("Error!"))
+		}
+		writeResponse(w,http.StatusOK,data)
 	}
 }
 
