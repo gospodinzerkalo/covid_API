@@ -32,3 +32,10 @@ type UpdatesAll struct {
 	Results	[]string 	`json:"results"`
 }
 
+type KazakhstanCases struct {
+	Name 		string	`json:"name"`
+	Cases		string	`json:"cases"`
+	Recovered	string	`json:"recovered"`
+	Deaths		string	`json:"deaths"`
+}
+

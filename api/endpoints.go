@@ -11,9 +11,10 @@ import (
 
 const (
 	baseURL = "https://www.worldometers.info/coronavirus/"
+	kzURL	= "https://informburo.kz/novosti/koronavirus-v-kazahstane-situaciya-na-21-maya-live.html"
 )
 
-
+// get total cases in the world
 func GetAllCases() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		c := colly.NewCollector()
@@ -41,7 +42,7 @@ func GetAllCases() func(w http.ResponseWriter, r *http.Request) {
 
 	}
 }
-
+// get case in special country
 func GetByCountry(countryParam string) func(w http.ResponseWriter,r *http.Request){
 	return func(w http.ResponseWriter, r *http.Request) {
 		c := colly.NewCollector()
@@ -81,6 +82,8 @@ func GetByCountry(countryParam string) func(w http.ResponseWriter,r *http.Reques
 
 	}
 }
+
+// get all countries with information about cases
 func GetCountries() func(w http.ResponseWriter,r *http.Request){
 	return func(w http.ResponseWriter, r *http.Request) {
 		countries := []*Country{}
@@ -113,6 +116,7 @@ func GetCountries() func(w http.ResponseWriter,r *http.Request){
 	}
 }
 
+// get news and updates current day
 func GetUpdatesToday() func(w http.ResponseWriter,r *http.Request){
 	return func(w http.ResponseWriter, r *http.Request) {
 		c:= colly.NewCollector()
@@ -138,6 +142,7 @@ func GetUpdatesToday() func(w http.ResponseWriter,r *http.Request){
 	}
 }
 
+// get news for the week
 func GetUpdatesAll() func(w http.ResponseWriter,r *http.Request){
 	return func(w http.ResponseWriter, r *http.Request) {
 		c := colly.NewCollector()
@@ -160,6 +165,36 @@ func GetUpdatesAll() func(w http.ResponseWriter,r *http.Request){
 		writeResponse(w,http.StatusOK,data)
 	}
 }
+
+
+// get cases in Kazakhstan's city/region
+func GetAllCasesKazakhstan() func(w http.ResponseWriter,r *http.Request){
+	return func(w http.ResponseWriter, r *http.Request) {
+		c := colly.NewCollector()
+		cases := []KazakhstanCases{}
+		c.OnHTML(".table", func(element *colly.HTMLElement) {
+			cities := element.ChildTexts("tbody tr")
+			for _,city := range cities[1:]{
+				split := strings.Split(city,"\n")
+				cas := KazakhstanCases{
+					Name:      split[0],
+					Cases:     split[1],
+					Recovered: split[2],
+					Deaths:    split[3],
+				}
+				cases = append(cases,cas)
+			}
+		})
+		c.Visit(kzURL)
+		data,err := json.Marshal(&cases)
+		if err !=nil{
+			writeResponse(w,http.StatusInternalServerError,[]byte("Error!"))
+			return
+		}
+		writeResponse(w,http.StatusOK,data)
+	}
+}
+
 
 func writeResponse(w http.ResponseWriter, status int, msg []byte) {
 	w.WriteHeader(status)
