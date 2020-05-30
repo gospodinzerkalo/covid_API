@@ -1,6 +1,37 @@
 {
 	"comment": "",
 	"ignore": "test",
-	"package": [],
+	"package": [
+		{
+			"path": "github.com/cpuguy83/go-md2man/v2/md2man",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "g4enG/yCAMBA+hXhFb1dsIuoGZk=",
+			"path": "github.com/gocolly/colly",
+			"revision": "556442d455cdde40dd6a0fd8f10119d018d2f577",
+			"revisionTime": "2020-05-26T10:12:46Z"
+		},
+		{
+			"path": "github.com/gocolly/colly/v2/debug",
+			"revision": "556442d455cdde40dd6a0fd8f10119d018d2f577"
+		},
+		{
+			"path": "github.com/gocolly/colly/v2/storage",
+			"revision": "556442d455cdde40dd6a0fd8f10119d018d2f577"
+		},
+		{
+			"checksumSHA1": "noSF80RZZSeRU8xp0i1NvZ0j36g=",
+			"path": "github.com/gorilla/mux",
+			"revision": "948bec34b5168796bf3fc4dbb09215baa970351a",
+			"revisionTime": "2020-05-17T04:02:54Z"
+		},
+		{
+			"checksumSHA1": "0yDN5hgsXa783NGVxyoF1207X9c=",
+			"path": "github.com/urfave/cli",
+			"revision": "477292c8d462a3f51cd18bc77c0542193a62274d",
+			"revisionTime": "2020-05-13T10:04:02Z"
+		}
+	],
 	"rootPath": "github.com/DarkhanMavlenberdiev/covid_api_scraping"
 }
