@@ -1,4 +1,4 @@
-package api
+package main
 
 // AllCases ...
 type AllCases struct {
