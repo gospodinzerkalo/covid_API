@@ -76,7 +76,6 @@ func (a *ancestorQuery) Select(t iterator) NodeNavigator {
 				return nil
 			}
 			first := true
-			node = node.Copy()
 			a.iterator = func() NodeNavigator {
 				if first && a.Self {
 					first = false

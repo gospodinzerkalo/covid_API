@@ -25,7 +25,7 @@ func predicate(q query) func(NodeNavigator) bool {
 func positionFunc(q query, t iterator) interface{} {
 	var (
 		count = 1
-		node  = t.Current().Copy()
+		node  = t.Current()
 	)
 	test := predicate(q)
 	for node.MoveToPrevious() {
@@ -40,7 +40,7 @@ func positionFunc(q query, t iterator) interface{} {
 func lastFunc(q query, t iterator) interface{} {
 	var (
 		count = 0
-		node  = t.Current().Copy()
+		node  = t.Current()
 	)
 	node.MoveToFirst()
 	test := predicate(q)

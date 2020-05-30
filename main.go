@@ -6,8 +6,8 @@ import (
 	"os"
 	"github.com/gorilla/mux"
 	"github.com/urfave/cli"
-	"fmt"
 	"./api"
+	"fmt"
 )
 
 
