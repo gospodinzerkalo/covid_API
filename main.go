@@ -6,6 +6,7 @@ import (
 	"os"
 	"github.com/gorilla/mux"
 	"github.com/urfave/cli"
+	"fmt"
 	"./api"
 )
 
@@ -37,9 +38,20 @@ func StartServer(d *cli.Context) error {
 	//Kazakhstan endpoints
 	router.Methods("GET").Path("/kz/allcases").HandlerFunc(api.GetAllCasesKazakhstan())
 
-	http.ListenAndServe("0.0.0.0:8000", router)
+	http.ListenAndServe(GetPort(), router)
 	return nil
 }
+
+func GetPort() string {
+	var port = os.Getenv("PORT")
+	// Set a default port if there is nothing in the environment
+	if port == "" {
+		port = "5000"
+		fmt.Println("INFO: No PORT environment variable detected, defaulting to " + port)
+	}
+	return ":" + port
+}
+
 
 
 
