@@ -5,26 +5,13 @@ import (
 	"net/http"
 	"os"
 	"github.com/gorilla/mux"
-	"github.com/urfave/cli"
+
 	"fmt"
 )
 
 
 func main() {
 
-	app := cli.NewApp()
-	app.Commands = cli.Commands{
-		&cli.Command{
-			Name:   "start",
-			Usage:  "start the local server",
-			Action: StartServer,
-		},
-	}
-	app.Run(os.Args)
-
-}
-
-func StartServer(d *cli.Context) error {
 	router := mux.NewRouter()
 
 	//unit endpoints
@@ -38,8 +25,11 @@ func StartServer(d *cli.Context) error {
 	router.Methods("GET").Path("/kz/allcases").HandlerFunc(GetAllCasesKazakhstan())
 
 	http.ListenAndServe(GetPort(), router)
-	return nil
+
+
 }
+
+
 
 func GetPort() string {
 	var port = os.Getenv("PORT")
