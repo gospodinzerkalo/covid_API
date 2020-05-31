@@ -5,31 +5,42 @@ import (
 	"net/http"
 	"os"
 	"github.com/gorilla/mux"
-
+	"github.com/urfave/cli"
 	"fmt"
+	"./api"
 )
 
 
 func main() {
 
-	router := mux.NewRouter()
-
-	//unit endpoints
-	router.Methods("GET").Path("/allcases").HandlerFunc(GetAllCases())
-	router.Methods("GET").Path("/country/{country}").HandlerFunc(GetByCountry("country"))
-	router.Methods("GET").Path("/countries").HandlerFunc(GetCountries())
-	router.Methods("GET").Path("/updates/today").HandlerFunc(GetUpdatesToday())
-	router.Methods("GET").Path("/updates/all").HandlerFunc(GetUpdatesAll())
-
-	//Kazakhstan endpoints
-	router.Methods("GET").Path("/kz/allcases").HandlerFunc(GetAllCasesKazakhstan())
-
-	http.ListenAndServe(GetPort(), router)
-
+	app := cli.NewApp()
+	app.Commands = cli.Commands{
+		&cli.Command{
+			Name:   "start",
+			Usage:  "start the local server",
+			Action: StartServer,
+		},
+	}
+	app.Run(os.Args)
 
 }
 
+func StartServer(d *cli.Context) error {
+	router := mux.NewRouter()
 
+	//unit endpoints
+	router.Methods("GET").Path("/allcases").HandlerFunc(api.GetAllCases())
+	router.Methods("GET").Path("/country/{country}").HandlerFunc(api.GetByCountry("country"))
+	router.Methods("GET").Path("/countries").HandlerFunc(api.GetCountries())
+	router.Methods("GET").Path("/updates/today").HandlerFunc(api.GetUpdatesToday())
+	router.Methods("GET").Path("/updates/all").HandlerFunc(api.GetUpdatesAll())
+
+	//Kazakhstan endpoints
+	router.Methods("GET").Path("/kz/allcases").HandlerFunc(api.GetAllCasesKazakhstan())
+
+	http.ListenAndServe(GetPort(), router)
+	return nil
+}
 
 func GetPort() string {
 	var port = os.Getenv("PORT")
