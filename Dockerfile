@@ -20,4 +20,4 @@ RUN go build -o main .
 EXPOSE 5000
 
 # Command to run the executable
-CMD ["make","start"]
+CMD ["make","run"]
