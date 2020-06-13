@@ -35,22 +35,19 @@ func StartServer(d *cli.Context) error {
 	router.GET("/countries",api.GetCountries())
 	router.GET("/updates/today",api.GetUpdatesToday())
 	router.GET("/updates/all",api.GetUpdatesAll())
-	port,err := GetPort()
-	if err != nil {
-		panic(err)
-	}
-	log.Fatal(fasthttp.ListenAndServe(port, router.Handler))
+
+	log.Fatal(fasthttp.ListenAndServe(GetPort(), router.Handler))
 	return nil
 }
-func GetPort() (string,error) {
+func GetPort() string{
 	var port = os.Getenv("PORT")
 	// Set a default port if there is nothing in the environment
 	if port == "" {
-
+		port = "8080"
 		fmt.Println("INFO: No PORT environment variable detected, defaulting to " + port)
-		return "",fmt.Errorf("port not set")
+
 	}
-	return ":" + port,nil
+	return ":" + port
 }
 
 
