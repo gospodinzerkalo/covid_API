@@ -45,8 +45,6 @@ func GetPort() string{
 	if port == "" {
 		port = "8000"
 		fmt.Println("INFO: No PORT environment variable detected, defaulting to " + port)
-	}else{
-		fmt.Println("INGO: PORT environment set to "+port)
 	}
 	return ":" + port
 }
