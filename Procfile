@@ -1,1 +1,1 @@
-web: make run
+web: docker-compose build / docker-compose up
